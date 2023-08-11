@@ -4,7 +4,6 @@ Copyright © 2023 NAME HERE <EMAIL ADDRESS>
 package cmd
 
 import (
-	"fmt"
 	"github.com/spf13/cobra"
 )
 
@@ -25,7 +24,7 @@ to quickly create a Cobra application.`,
 		architecture_name := "x86_64"
 		package_name := "k8s"
 
-		url := base_url + "/" + project_name + "/" + repository_name + "/" + architecture_name + "/" + package_name + "/_buildinfo"
+		_ = base_url + "/" + project_name + "/" + repository_name + "/" + architecture_name + "/" + package_name + "/_buildinfo"
 	},
 }
 

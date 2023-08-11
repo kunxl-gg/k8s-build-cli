@@ -1,12 +1,15 @@
 /*
 Copyright © 2023 NAME HERE <EMAIL ADDRESS>
-
 */
 package cmd
 
 import (
 	"fmt"
+	"net/http"
+	"os"
+	"strconv"
 
+	"github.com/joho/godotenv"
 	"github.com/spf13/cobra"
 )
 
@@ -21,7 +24,41 @@ Cobra is a CLI library for Go that empowers applications.
 This application is a tool to generate the needed files
 to quickly create a Cobra application.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("branch called")
+		err := godotenv.Load()
+		if err != nil {
+			panic(err)
+		}
+		var username string = os.Getenv("OBS_USERNAME");
+
+		var password string = os.Getenv("OBS_PASSWORD");
+
+		project_name := "home:kunxl.gg"
+		package_name := "hello-world"
+		var target_project string = "home:kunxl.gg:subproject"
+		var target_package string  = "hello-world-again"
+		var add_repositories int = 1
+
+		base_url := "https://api.opensuse.org/source"
+
+		url := base_url + "/" + project_name + "/" + package_name + "?cmd=branch&target_project=" + target_project + "&target_package=" + target_package + "&add_repositories=" + strconv.Itoa(add_repositories)
+
+		req, err := http.NewRequest("POST", url, nil)
+		if err != nil {
+			panic(err)
+		}
+
+		req.Header.Set("Content-Type", "application/xml")
+		req.SetBasicAuth(username, password)
+
+		client := &http.Client{}
+		resp, err := client.Do(req)
+		if err != nil {
+			panic(err)
+		}
+
+		fmt.Println(resp)
+		fmt.Printf("HTTP Response Status: %s\n", resp.Status)
+
 	},
 }
 
