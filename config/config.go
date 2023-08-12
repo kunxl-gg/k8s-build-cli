@@ -7,9 +7,6 @@ import (
 
 func InitConfig() {
 
-	viper.SetConfigName("config")
-	viper.AddConfigPath("../")
-
 	viper.AutomaticEnv()
 
 	err := viper.ReadInConfig()

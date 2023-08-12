@@ -9,7 +9,9 @@ import (
 	"os"
 
 	"github.com/joho/godotenv"
+	"github.com/kunxl-gg/lfx-lezgooo/config"
 	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
 )
 
 // removeCmd represents the remove command
@@ -30,9 +32,11 @@ to quickly create a Cobra application.`,
 			panic("Error loading .env file")
 		}
 
+		config.InitConfig()
+
 		// getting the environment variables
 		var username string = os.Getenv("OBS_USERNAME")
-		var password string = os.Getenv("OBS_PASSWORD")
+		var password string = viper.GetString("OBS_PASSWORD")
 
 		var base_url string = "https://api.opensensemap.org"
 		var project_name string = args[0]
