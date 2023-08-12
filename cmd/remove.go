@@ -7,14 +7,14 @@ import (
 	"fmt"
 	"net/http"
 	"os"
-	"strconv"
+
 	"github.com/joho/godotenv"
 	"github.com/spf13/cobra"
 )
 
-// branchCmd represents the branch command
-var branchCmd = &cobra.Command{
-	Use:   "branch",
+// removeCmd represents the remove command
+var removeCmd = &cobra.Command{
+	Use:   "remove",
 	Short: "A brief description of your command",
 	Long: `A longer description that spans multiple lines and likely contains examples
 and usage of using your command. For example:
@@ -23,31 +23,31 @@ Cobra is a CLI library for Go that empowers applications.
 This application is a tool to generate the needed files
 to quickly create a Cobra application.`,
 	Run: func(cmd *cobra.Command, args []string) {
+
+		// loading the dotenv file
 		err := godotenv.Load()
 		if err != nil {
-			panic(err)
+			panic("Error loading .env file")
 		}
-		var username string = os.Getenv("OBS_USERNAME");
 
-		var password string = os.Getenv("OBS_PASSWORD");
+		// getting the environment variables
+		var username string = os.Getenv("OBS_USERNAME")
+		var password string = os.Getenv("OBS_PASSWORD")
 
-		project_name := "home:kunxl.gg"
-		package_name := "hello-world"
-		var target_project string = "home:kunxl.gg:subproject"
-		var target_package string  = "hello-world-again"
-		var add_repositories int = 1
+		var base_url string = "https://api.opensensemap.org"
+		var project_name string = args[0]
+		fmt.Println(project_name)
 
-		base_url := "https://api.opensuse.org/source"
+		// the complete url
+		var url string = base_url + "/source/" + project_name 
 
-		url := base_url + "/" + project_name + "/" + package_name + "?cmd=branch&target_project=" + target_project + "&target_package=" + target_package + "&add_repositories=" + strconv.Itoa(add_repositories)
-
-		req, err := http.NewRequest("POST", url, nil)
+		req, err := http.NewRequest("DELETE", url, nil)
 		if err != nil {
 			panic(err)
 		}
 
-		req.Header.Set("Content-Type", "application/xml")
 		req.SetBasicAuth(username, password)
+		req.Header.Set("Content-Type", "application/xml")
 
 		client := &http.Client{}
 		resp, err := client.Do(req)
@@ -55,21 +55,22 @@ to quickly create a Cobra application.`,
 			panic(err)
 		}
 
-		fmt.Printf("HTTP Response Status: %s\n", resp.Status)
-
+		fmt.Println(resp)
+		fmt.Println(resp.Status)
+		fmt.Println("HTTP Response Status:", resp.StatusCode, http.StatusText(resp.StatusCode))
 	},
 }
 
 func init() {
-	rootCmd.AddCommand(branchCmd)
+	rootCmd.AddCommand(removeCmd)
 
 	// Here you will define your flags and configuration settings.
 
 	// Cobra supports Persistent Flags which will work for this command
 	// and all subcommands, e.g.:
-	// branchCmd.PersistentFlags().String("foo", "", "A help for foo")
+	// removeCmd.PersistentFlags().String("foo", "", "A help for foo")
 
 	// Cobra supports local flags which will only run when this command
 	// is called directly, e.g.:
-	// branchCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+	// removeCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 }
