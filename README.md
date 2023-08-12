@@ -50,7 +50,7 @@ Contributions to `k8s-build-cli` are more than welcome! Whether it's bug reports
 
 ## License
 
-This project is licensed under the ![MIT License](https:github.com/kunxl.gg/k8s-build-cli/LICENSE.md)
----
+This project is licensed under the [MIT License](https:github.com/kunxl.gg/k8s-build-cli/LICENSE.md)
+
 
 The tags (badges) for "Go" and "Under Development" have been added at the top. These use the shields.io service, which is a popular way to add badges to READMEs. Adjust placeholders and other content as needed.
