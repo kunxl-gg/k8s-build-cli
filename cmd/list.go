@@ -5,18 +5,17 @@ package cmd
 
 import (
 	"fmt"
+	"io/ioutil"
+	"log"
 	"net/http"
 	"os"
-
 	"github.com/joho/godotenv"
-	"github.com/kunxl-gg/lfx-lezgooo/config"
 	"github.com/spf13/cobra"
-	"github.com/spf13/viper"
 )
 
-// removeCmd represents the remove command
-var removeCmd = &cobra.Command{
-	Use:   "remove",
+// listCmd represents the list command
+var listCmd = &cobra.Command{
+	Use:   "list",
 	Short: "A brief description of your command",
 	Long: `A longer description that spans multiple lines and likely contains examples
 and usage of using your command. For example:
@@ -26,28 +25,26 @@ This application is a tool to generate the needed files
 to quickly create a Cobra application.`,
 	Run: func(cmd *cobra.Command, args []string) {
 
-		// loading the dotenv file
 		err := godotenv.Load()
 		if err != nil {
-			panic("Error loading .env file")
+			fmt.Errorf("Error loading .env file")
 		}
-
-		config.InitConfig()
 
 		// getting the environment variables
 		var username string = os.Getenv("OBS_USERNAME")
-		var password string = viper.GetString("OBS_PASSWORD")
+		var password string = os.Getenv("OBS_PASSWORD")
 
-		var base_url string = "https://api.opensensemap.org"
-		var project_name string = args[0]
-		fmt.Println(project_name)
+		fmt.Println(username, password)
+
+		var base_url string = "https://api.opensuse.org/source"
+		var project_name string = "home:kunxl.gg"
 
 		// the complete url
-		var url string = base_url + "/source/" + project_name 
+		var url string = base_url + "/" + project_name + "?deleted=0&expand=0"
 
-		req, err := http.NewRequest("DELETE", url, nil)
+		req, err := http.NewRequest("GET", url, nil)
 		if err != nil {
-			panic(err)
+			fmt.Errorf("Error creating request")
 		}
 
 		req.SetBasicAuth(username, password)
@@ -56,25 +53,31 @@ to quickly create a Cobra application.`,
 		client := &http.Client{}
 		resp, err := client.Do(req)
 		if err != nil {
-			panic(err)
+			fmt.Errorf("Error sending request", err)
 		}
 
-		fmt.Println(resp)
-		fmt.Println(resp.Status)
-		fmt.Println("HTTP Response Status:", resp.StatusCode, http.StatusText(resp.StatusCode))
+		fmt.Println(resp.Status, http.StatusText(resp.StatusCode))
+		body, err := ioutil.ReadAll(resp.Body)
+		if err != nil {
+			fmt.Errorf("Error reading response body", err)
+		}
+
+		log.Default().Println(string(body))
+		defer resp.Body.Close()
+
 	},
 }
 
 func init() {
-	rootCmd.AddCommand(removeCmd)
+	rootCmd.AddCommand(listCmd)
 
 	// Here you will define your flags and configuration settings.
 
 	// Cobra supports Persistent Flags which will work for this command
 	// and all subcommands, e.g.:
-	// removeCmd.PersistentFlags().String("foo", "", "A help for foo")
+	// listCmd.PersistentFlags().String("foo", "", "A help for foo")
 
 	// Cobra supports local flags which will only run when this command
 	// is called directly, e.g.:
-	// removeCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+	// listCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 }

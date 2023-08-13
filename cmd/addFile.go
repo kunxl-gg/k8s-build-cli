@@ -28,14 +28,15 @@ to quickly create a Cobra application.`,
 		if err != nil {
 			panic(err)
 		}
+		
+		username := os.Getenv("OBS_USERNAME")
+		password := os.Getenv("OBS_PASSWORD")
 
 		base_url := "https://api.opensuse.org/source"
 		project_name := "home:kunxl.gg"
 		package_name := "hello-world"
 		file_name := args[0]
 
-		username := os.Getenv("OBS_USERNAME")
-		password := os.Getenv("OBS_PASSWORD")
 
 		fmt.Println(username, password)
 
