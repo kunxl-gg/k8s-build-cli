@@ -4,11 +4,8 @@ Copyright © 2023 NAME HERE <EMAIL ADDRESS>
 package cmd
 
 import (
-	"bytes"
 	"fmt"
-	"net/http"
-	"os"
-	"github.com/joho/godotenv"
+	"github.com/kunxl-gg/lfx-lezgooo/helpers"
 	"github.com/spf13/cobra"
 )
 
@@ -23,46 +20,24 @@ Cobra is a CLI library for Go that empowers applications.
 This application is a tool to generate the needed files
 to quickly create a Cobra application.`,
 	Run: func(cmd *cobra.Command, args []string) {
-
-		err := godotenv.Load()
-		if err != nil {
-			panic(err)
-		}
 		
-		username := os.Getenv("OBS_USERNAME")
-		password := os.Getenv("OBS_PASSWORD")
-
 		base_url := "https://api.opensuse.org/source"
 		project_name := "home:kunxl.gg"
 		package_name := "hello-world"
 		file_name := args[0]
 
-
-		fmt.Println(username, password)
-
-		data := []byte(`{
-			"project_name": "home:kunxl.gg",
-			"package_name": "hello-world",
-			"file_name": "root.go", 
-		}`)
+		// data := []byte(`{
+		// 	"project_name": "home:kunxl.gg",
+		// 	"package_name": "hello-world",
+		// 	"file_name": "root.go", 
+		// }`)
 
 		url := base_url + "/" + project_name + "/" + package_name + "/" + file_name
-		req, err := http.NewRequest("PUT", url, bytes.NewBuffer(data));
-		if err != nil {
-			panic(err)
-		}
 
-		req.Header.Set("Content-Type", "application/xml")
-		req.SetBasicAuth(username, password)
-
-		client := &http.Client{}
-		resp, err := client.Do(req)
-		if err != nil {
-			panic(err)
-		}
-		defer resp.Body.Close()
-	
+		// making an api call
+		resp := helpers.APICall("PUT", url)
 		fmt.Printf("HTTP Response Status: %s\n", resp.Status)
+	
 	},
 }
 
