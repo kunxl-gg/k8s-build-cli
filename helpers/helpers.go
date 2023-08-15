@@ -32,9 +32,6 @@ func APICall(method string, url string) *http.Response {
 	client := &http.Client{}
 	resp, err := client.Do(req)
 	CheckError(err)
-
-	// closing the http connection
-	defer resp.Body.Close()
 	
 	// return resp
 	return resp
