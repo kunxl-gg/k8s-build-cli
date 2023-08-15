@@ -5,10 +5,9 @@ package cmd
 
 import (
 	"fmt"
-	"net/http"
-	"os"
 	"strconv"
-	"github.com/joho/godotenv"
+	"github.com/kunxl-gg/lfx-lezgooo/config"
+	"github.com/kunxl-gg/lfx-lezgooo/helpers"
 	"github.com/spf13/cobra"
 )
 
@@ -23,38 +22,22 @@ Cobra is a CLI library for Go that empowers applications.
 This application is a tool to generate the needed files
 to quickly create a Cobra application.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		err := godotenv.Load()
-		if err != nil {
-			panic(err)
-		}
-		var username string = os.Getenv("OBS_USERNAME");
 
-		var password string = os.Getenv("OBS_PASSWORD");
-
-		project_name := "home:kunxl.gg"
+		// declaring parameters for the url
+		project_name := "home:kunxl.sol"
 		package_name := "hello-world"
-		var target_project string = "home:kunxl.gg:subproject"
+		var target_project string = "home:kunxl.sol:subproject"
 		var target_package string  = "hello-world-again"
 		var add_repositories int = 1
 
-		base_url := "https://api.opensuse.org/source"
+		// final url
+		url := config.BaseUrl + "source/?cmd=branch&project=" + project_name + "&package=" + package_name + "&target_project=" + target_project + "&target_package=" + target_package + "&add_repositories=" + strconv.Itoa(add_repositories)
 
-		url := base_url + "/" + project_name + "/" + package_name + "?cmd=branch&target_project=" + target_project + "&target_package=" + target_package + "&add_repositories=" + strconv.Itoa(add_repositories)
+		fmt.Println(url)
+		// response of the request
+		resp := helpers.APICall("POST", url)
 
-		req, err := http.NewRequest("POST", url, nil)
-		if err != nil {
-			panic(err)
-		}
-
-		req.Header.Set("Content-Type", "application/xml")
-		req.SetBasicAuth(username, password)
-
-		client := &http.Client{}
-		resp, err := client.Do(req)
-		if err != nil {
-			panic(err)
-		}
-
+		// printing the responseˀ
 		fmt.Printf("HTTP Response Status: %s\n", resp.Status)
 
 	},

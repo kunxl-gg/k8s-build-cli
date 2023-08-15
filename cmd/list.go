@@ -8,7 +8,9 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+
 	"github.com/joho/godotenv"
+	"github.com/kunxl-gg/lfx-lezgooo/helpers"
 	"github.com/spf13/cobra"
 )
 
@@ -25,10 +27,7 @@ to quickly create a Cobra application.`,
 	Run: func(cmd *cobra.Command, args []string) {
 
 		err := godotenv.Load()
-		if err != nil {
-			fmt.Errorf("Error loading .env file")
-		}
-
+		helpers.CheckError(err)
 
 		var base_url string = "https://api.opensuse.org/source"
 		var project_name string = "home:kunxl.gg"
@@ -37,23 +36,17 @@ to quickly create a Cobra application.`,
 		var url string = base_url + "/" + project_name + "?deleted=0&expand=0"
 
 		req, err := http.NewRequest("GET", url, nil)
-		if err != nil {
-			fmt.Errorf("Error creating request")
-		}
+		helpers.CheckError(err)
 
 		req.Header.Set("Content-Type", "application/xml")
 
 		client := &http.Client{}
 		resp, err := client.Do(req)
-		if err != nil {
-			fmt.Errorf("Error sending request", err)
-		}
+		helpers.CheckError(err)
 
 		fmt.Println(resp.Status, http.StatusText(resp.StatusCode))
 		body, err := ioutil.ReadAll(resp.Body)
-		if err != nil {
-			fmt.Errorf("Error reading response body", err)
-		}
+		helpers.CheckError(err)
 
 		log.Default().Println(string(body))
 		defer resp.Body.Close()
