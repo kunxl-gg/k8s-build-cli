@@ -1,16 +1,24 @@
 package config
 
 import (
-	"fmt"
-	"github.com/spf13/viper"
+	"os"
+	"github.com/joho/godotenv"
+	"github.com/kunxl-gg/lfx-lezgooo/helpers"
 )
 
-func InitConfig() {
+var (
+	Username string
+	Password string
+)
 
-	viper.AutomaticEnv()
+func Init() {
 
-	err := viper.ReadInConfig()
-	if err != nil {
-		fmt.Printf("Error reading config file, %s", err)
-	}
+	// fetch the env variables
+	err := godotenv.Load()
+	helpers.CheckError(err)
+
+	// set the global variables
+	Username = os.Getenv("OBS_USERNAME")
+	Password = os.Getenv("OBS_PASSWORD")
+
 }

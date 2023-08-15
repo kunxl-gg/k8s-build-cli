@@ -5,9 +5,7 @@ package cmd
 
 import (
 	"fmt"
-	"os"
-
-	"github.com/joho/godotenv"
+	"github.com/kunxl-gg/lfx-lezgooo/config"
 	"github.com/spf13/cobra"
 )
 
@@ -22,15 +20,11 @@ Cobra is a CLI library for Go that empowers applications.
 This application is a tool to generate the needed files
 to quickly create a Cobra application.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		err := godotenv.Load()
-		if err != nil {
-			panic(err)
-		}
 		
-		username := os.Getenv("OBS_USERNAME")
-		password := os.Getenv("OBS_PASSWORD")
+		username := config.Username
+		password := config.Password
 
-		var base_url string = "https://api.opensuse.org/source"
+		fmt.Println(username, password)
 		
 	},
 }

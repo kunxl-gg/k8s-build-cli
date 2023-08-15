@@ -8,7 +8,6 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
-	"os"
 	"github.com/joho/godotenv"
 	"github.com/spf13/cobra"
 )
@@ -30,11 +29,6 @@ to quickly create a Cobra application.`,
 			fmt.Errorf("Error loading .env file")
 		}
 
-		// getting the environment variables
-		var username string = os.Getenv("OBS_USERNAME")
-		var password string = os.Getenv("OBS_PASSWORD")
-
-		fmt.Println(username, password)
 
 		var base_url string = "https://api.opensuse.org/source"
 		var project_name string = "home:kunxl.gg"
@@ -47,7 +41,6 @@ to quickly create a Cobra application.`,
 			fmt.Errorf("Error creating request")
 		}
 
-		req.SetBasicAuth(username, password)
 		req.Header.Set("Content-Type", "application/xml")
 
 		client := &http.Client{}
