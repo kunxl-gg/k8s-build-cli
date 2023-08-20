@@ -1,5 +1,3 @@
-Certainly! Here's the updated `README.md` with tags:
-
 ---
 
 # k8s-build-cli 
